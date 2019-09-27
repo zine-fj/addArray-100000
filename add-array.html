@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>每次加载 n 条数据</title>
+    <script src="https://cdn.bootcss.com/jquery/2.1.4/jquery.min.js"></script>
+    <style>
+        button {
+            width: 100px;
+            height: 50px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: plum;
+        }
+    </style>
+</head>
+<body>
+    <button id="btn">点我加载</button>
+    <ol id="list"></ol>
+    <script>
+        // 每次展示两条数据
+        let dataList = [
+            {name: '顾天依'},{name: '聂闵仲'},
+            {name: '顾天依'},{name: '聂闵仲'},
+            {name: '顾天依'},{name: '聂闵仲'},
+            {name: '顾天依'},{name: '聂闵仲'},
+            {name: '顾天依'},{name: '聂闵仲'},
+            {name: '顾天依'},{name: '聂闵仲'},
+        ];
+
+        // 分割数组，参数一: 数组，参数二:数组中每个数组中含有多少元素。
+        function group(array, subGroupLength) {
+            let index = 0;
+            let newArray = [];
+            while (index < array.length) {
+                newArray.push(array.slice(index, index += subGroupLength));
+            }
+            return newArray;
+        }
+        let groupedArray = group(dataList, 2);
+
+        listFun(groupedArray[0]);
+        let addNum = 1;
+        $('button').click(function () {
+            let newArr = [];
+            addNum += 1;
+            let theLen = groupedArray.length;
+            console.log(dataList.length,addNum,theLen)
+            if(addNum <= theLen) {
+                if(addNum < dataList.length) {
+                    newArr = groupedArray.slice(0,addNum)
+                    console.log(newArr)
+                    let endArr = [];
+                    newArr.forEach((item,index)=>{
+                        item.forEach((newItem,newNum)=>{
+                            endArr.push({name: newItem.name})
+                        })
+                    })
+                    console.log(endArr)
+                    listFun(endArr);
+                }
+                $('#btn').html('再点一下')
+            }
+            if(addNum >= theLen) {
+                $('#btn').html('全部加载完啦')
+            }
+        });
+
+        // 渲染 DOM 函数
+        function listFun(arrList) {
+            let li = '';
+            arrList.forEach((item, index) => {
+                li += `<li>${item.name}</li>`
+            });
+            $('#list').html(li)
+        };
+    </script>
+</body>
+
+</html>
